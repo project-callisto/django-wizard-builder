@@ -3,9 +3,17 @@
         <title>Callisto</title>
     </head>
     <body>
+
         <h1>Callisto</h1>
-        <input id="id_new_report" placeholder="Write it down"/>
+
+        <form method="POST">
+            <input id="id_new_report" name="report_text" placeholder="Write it down"/>
+            {% csrf_token %}
+        </form>
+
+        <table id="id_report_table">
+            <tr><td>Report 1: {{ report_text }}</td></tr>
+        </table>
+
     </body>
-    <table id="id_report_table">
-    </table>
 </html>

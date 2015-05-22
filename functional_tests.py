@@ -31,15 +31,26 @@ class NewVisitorTest(unittest.TestCase):
         inputbox.send_keys('Something shady happened')
 
         # When she hits enter, the page updates, and now the page lists
-        # "Report: Something shady happened" as an item in a list
+        # "Report 1: Something shady happened" as an item in a list
         inputbox.send_keys(Keys.ENTER)
 
         table = self.browser.find_element_by_id('id_report_table')
         rows = table.find_elements_by_tag_name('tr')
-        self.assertTrue(
-            any(row.text == 'Report: Something shady happened' for row in rows),
-            "New report did not appear in table"
-        )
+        self.assertIn('Report 1: Something shady happened', [row.text for row in rows])
+
+        #She enters another report
+        inputbox = self.browser.find_element_by_id('id_new_report')
+        inputbox.send_keys('Another shady thing went down')
+
+        # When she hits enter, the page updates, and now the page lists
+        # both reports as an item in a list
+        inputbox.send_keys(Keys.ENTER)
+
+        table = self.browser.find_element_by_id('id_report_table')
+        rows = table.find_elements_by_tag_name('tr')
+        self.assertIn('Report 1: Something shady happened', [row.text for row in rows])
+        self.assertIn('Report 2: Another shady thing went down', [row.text for row in rows])
+
 
         # There is a button allowing her to submit. She submits the report
         self.fail('Finish the test!')
