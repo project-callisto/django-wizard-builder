@@ -11,6 +11,11 @@ class NewVisitorTest(unittest.TestCase):
     def tearDown(self):
         self.browser.quit()
 
+    def check_for_row_in_report_table(self, row_text):
+        table = self.browser.find_element_by_id('id_report_table')
+        rows = table.find_elements_by_tag_name('tr')
+        self.assertIn(row_text, [row.text for row in rows])
+
     def test_can_start_a_report_and_submit_it(self):
         #Edith visits Callisto
         self.browser.get('http://localhost:8000')
@@ -34,9 +39,7 @@ class NewVisitorTest(unittest.TestCase):
         # "Report 1: Something shady happened" as an item in a list
         inputbox.send_keys(Keys.ENTER)
 
-        table = self.browser.find_element_by_id('id_report_table')
-        rows = table.find_elements_by_tag_name('tr')
-        self.assertIn('Report 1: Something shady happened', [row.text for row in rows])
+        self.check_for_row_in_report_table('Report 1: Something shady happened')
 
         #She enters another report
         inputbox = self.browser.find_element_by_id('id_new_report')
@@ -46,10 +49,8 @@ class NewVisitorTest(unittest.TestCase):
         # both reports as an item in a list
         inputbox.send_keys(Keys.ENTER)
 
-        table = self.browser.find_element_by_id('id_report_table')
-        rows = table.find_elements_by_tag_name('tr')
-        self.assertIn('Report 1: Something shady happened', [row.text for row in rows])
-        self.assertIn('Report 2: Another shady thing went down', [row.text for row in rows])
+        self.check_for_row_in_report_table('Report 1: Something shady happened')
+        self.check_for_row_in_report_table('Report 2: Another shady thing went down')
 
 
         # There is a button allowing her to submit. She submits the report
