@@ -10,9 +10,6 @@ class NewVisitorTest(unittest.TestCase):
     def tearDown(self):
         self.browser.quit()
 
-    def test_anything(self):
-        self.assertTrue(False)
-
     def test_can_start_a_report_and_submit_it(self):
         #Edith visits Callisto
         self.browser.get('http://localhost:8000')
