@@ -1,7 +1,10 @@
-from django.http import HttpResponse
-from django.shortcuts import render
+from django.shortcuts import redirect, render
+from reports.models import Report
 
 def home_page(request):
-    return render(request, 'home.html', {
-        'report_text': request.POST.get('report_text', ''),
-    })
+    if request.method == 'POST':
+        Report.objects.create(text=request.POST['report_text'])
+        return redirect('/')
+
+    reports = Report.objects.all()
+    return render(request, 'home.html', {'reports': reports})

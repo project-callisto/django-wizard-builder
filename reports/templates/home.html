@@ -12,7 +12,9 @@
         </form>
 
         <table id="id_report_table">
-            <tr><td>Report 1: {{ report_text }}</td></tr>
+            {% for report in reports %}
+                <tr><td>Report {{ forloop.counter }}: {{ report.text }}</td></tr>
+            {% endfor %}
         </table>
 
     </body>

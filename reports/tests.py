@@ -25,12 +25,33 @@ class HomePageTest(TestCase):
 
         response = home_page(request)
 
-        self.assertIn('A new report', response.content.decode())
-        expected_html = render_to_string(
-            'home.html',
-            {'report_text':  'A new report'}
-        )
-        self.assertEqual(response.content.decode(), expected_html)
+        self.assertEqual(Report.objects.count(), 1)
+        new_report = Report.objects.first()
+        self.assertEqual(new_report.text, 'A new report')
+
+    def test_home_page_redirects_after_POST(self):
+        request = HttpRequest()
+        request.method = 'POST'
+        request.POST['report_text'] = 'A new report'
+
+        response = home_page(request)
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response['location'], '/')
+
+    def test_home_page_displays_all_list_items(self):
+        Report.objects.create(text='reporty 1')
+        Report.objects.create(text='reporty 2')
+
+        request = HttpRequest()
+        response = home_page(request)
+
+        self.assertIn('reporty 1', response.content.decode())
+        self.assertIn('reporty 2', response.content.decode())
+
+    def test_home_page_only_saves_when_necessary(self):
+        request = HttpRequest()
+        home_page(request)
+        self.assertEqual(Report.objects.count(), 0)
 
 class ReportModelTest(TestCase):
 
