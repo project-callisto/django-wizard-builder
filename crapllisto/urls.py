@@ -5,8 +5,8 @@ from reports import views
 
 urlpatterns = [
     # Examples:
-    url(r'^$', views.home_page, name='home'),
-    # url(r'^blog/', include('blog.urls')),
+    url(r'^$', 'reports.views.home_page', name='home'),
+    url(r'^reports/the-only-report-in-the-world/$', views.view_report, name='view_report'),
 
     #url(r'^admin/', include(admin.site.urls)),
 ]

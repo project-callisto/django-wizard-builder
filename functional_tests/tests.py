@@ -40,7 +40,7 @@ class NewVisitorTest(LiveServerTestCase):
         # "Report 1: Something shady happened" as an item in a list
         inputbox.send_keys(Keys.ENTER)
         edith_report_url = self.browser.current_url
-        self.assertRegex(edith_report_url, '/report/.+')
+        self.assertRegex(edith_report_url, '/reports/.+')
 
         self.check_for_row_in_report_table('Report 1: Something shady happened')
 

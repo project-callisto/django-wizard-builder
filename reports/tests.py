@@ -36,17 +36,7 @@ class HomePageTest(TestCase):
 
         response = home_page(request)
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(response['location'], '/')
-
-    def test_home_page_displays_all_list_items(self):
-        Report.objects.create(text='reporty 1')
-        Report.objects.create(text='reporty 2')
-
-        request = HttpRequest()
-        response = home_page(request)
-
-        self.assertIn('reporty 1', response.content.decode())
-        self.assertIn('reporty 2', response.content.decode())
+        self.assertEqual(response['location'], '/reports/the-only-report-in-the-world/')
 
     def test_home_page_only_saves_when_necessary(self):
         request = HttpRequest()
@@ -71,3 +61,14 @@ class ReportModelTest(TestCase):
         second_saved_report = saved_reports[1]
         self.assertEqual(first_saved_report.text, 'The first report ever')
         self.assertEqual(second_saved_report.text, 'Report number two')
+
+class ListViewTest(TestCase):
+
+    def test_displays_all_items(self):
+        Report.objects.create(text='reporty 1')
+        Report.objects.create(text='reporty 2')
+
+        response = self.client.get('/reports/the-only-report-in-the-world/')
+
+        self.assertContains(response, 'reporty 1')
+        self.assertContains(response, 'reporty 2')
