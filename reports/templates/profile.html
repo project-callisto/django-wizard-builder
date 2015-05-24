@@ -7,13 +7,13 @@
 <body>
         <h1>Crapllisto</h1>
 
-        <form method="POST" action="/profiles/new">
+        <form method="POST" action="/profiles/{{ profile.id }}/add_report">
             <input id="id_new_report" name="report_text" placeholder="Write it down"/>
             {% csrf_token %}
         </form>
 
         <table id="id_report_table">
-            {% for report in reports %}
+            {% for report in profile.report_set.all %}
                 <tr><td>Report {{ forloop.counter }}: {{ report.text }}</td></tr>
             {% endfor %}
         </table>

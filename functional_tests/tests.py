@@ -79,8 +79,3 @@ class NewVisitorTest(LiveServerTestCase):
         page_text = self.browser.find_element_by_tag_name('body').text
         self.assertNotIn('Something shady happened', page_text)
         self.assertIn('I dunno man', page_text)
-
-        # There is a button allowing her to submit. She submits the report
-        self.fail('Finish the test!')
-
-        # The page updates again, and now shows the report as submitted
