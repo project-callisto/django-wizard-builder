@@ -64,6 +64,10 @@ class ReportModelTest(TestCase):
 
 class ListViewTest(TestCase):
 
+    def test_uses_list_template(self):
+        response = self.client.get('/reports/the-only-report-in-the-world/')
+        self.assertTemplateUsed(response, 'report.html')
+
     def test_displays_all_items(self):
         Report.objects.create(text='reporty 1')
         Report.objects.create(text='reporty 2')

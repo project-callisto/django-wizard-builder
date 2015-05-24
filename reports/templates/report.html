@@ -6,11 +6,16 @@
 </head>
 <body>
         <h1>Callisto</h1>
-        <h2>Start a new report</h2>
 
-        <form method="POST">
+        <form method="POST" action="/">
             <input id="id_new_report" name="report_text" placeholder="Write it down"/>
             {% csrf_token %}
         </form>
+
+        <table id="id_report_table">
+            {% for report in reports %}
+                <tr><td>Report {{ forloop.counter }}: {{ report.text }}</td></tr>
+            {% endfor %}
+        </table>
 </body>
 </html>

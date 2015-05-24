@@ -7,8 +7,8 @@ def home_page(request):
         return redirect('/reports/the-only-report-in-the-world/')
 
     reports = Report.objects.all()
-    return render(request, 'home.html', {'reports': reports})
+    return render(request, 'home.html')
 
 def view_report(request):
     reports = Report.objects.all()
-    return render(request, 'home.html', {'reports': reports})
+    return render(request, 'report.html', {'reports': reports})
