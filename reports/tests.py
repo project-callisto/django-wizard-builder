@@ -18,31 +18,6 @@ class HomePageTest(TestCase):
         expected_html = render_to_string('home.html')
         self.assertEqual(response.content.decode(), expected_html)
 
-    def test_home_page_can_save_a_POST_request(self):
-        request = HttpRequest()
-        request.method = 'POST'
-        request.POST['report_text'] = 'A new report'
-
-        response = home_page(request)
-
-        self.assertEqual(Report.objects.count(), 1)
-        new_report = Report.objects.first()
-        self.assertEqual(new_report.text, 'A new report')
-
-    def test_home_page_redirects_after_POST(self):
-        request = HttpRequest()
-        request.method = 'POST'
-        request.POST['report_text'] = 'A new report'
-
-        response = home_page(request)
-        self.assertEqual(response.status_code, 302)
-        self.assertEqual(response['location'], '/reports/the-only-report-in-the-world/')
-
-    def test_home_page_only_saves_when_necessary(self):
-        request = HttpRequest()
-        home_page(request)
-        self.assertEqual(Report.objects.count(), 0)
-
 class ReportModelTest(TestCase):
 
     def test_saving_and_retrieving_items(self):
@@ -76,3 +51,20 @@ class ListViewTest(TestCase):
 
         self.assertContains(response, 'reporty 1')
         self.assertContains(response, 'reporty 2')
+
+class NewListTest(TestCase):
+    def test_home_page_can_save_a_POST_request(self):
+        self.client.post(
+            '/reports/new',
+            data={'report_text': 'A new report'}
+        )
+        self.assertEqual(Report.objects.count(), 1)
+        new_report = Report.objects.first()
+        self.assertEqual(new_report.text, 'A new report')
+
+    def test_home_page_redirects_after_POST(self):
+        response = self.client.post(
+            '/reports/new',
+            data={'report_text': 'A new report'}
+        )
+        self.assertRedirects(response, '/reports/the-only-report-in-the-world/')

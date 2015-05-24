@@ -62,8 +62,8 @@ class NewVisitorTest(LiveServerTestCase):
         # Francis visits the home page. No sign of Edith's report
         self.browser.get(self.live_server_url)
         page_text = self.browser.find_element_by_tag_name('body').text
-        self.assertNotIn('Something shady happened')
-        self.assertNotIn('Another shady thing went down')
+        self.assertNotIn('Something shady happened', page_text)
+        self.assertNotIn('Another shady thing went down', page_text)
 
         # Francis starts a new report himself
         inputbox = self.browser.find_element_by_id('id_new_report')
@@ -77,7 +77,7 @@ class NewVisitorTest(LiveServerTestCase):
 
         # Still no trace of Edith's report
         page_text = self.browser.find_element_by_tag_name('body').text
-        self.assertNotIn('Something shady happened')
+        self.assertNotIn('Something shady happened', page_text)
         self.assertIn('I dunno man', page_text)
 
         # There is a button allowing her to submit. She submits the report
