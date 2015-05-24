@@ -22,9 +22,9 @@ class NewVisitorTest(LiveServerTestCase):
         self.browser.get(self.live_server_url)
 
         # She notices the page title and header mentions Callisto
-        self.assertIn('Callisto', self.browser.title)
+        self.assertIn('Crapllisto', self.browser.title)
         header_text = self.browser.find_element_by_tag_name('h1').text
-        self.assertIn('Callisto', header_text)
+        self.assertIn('Crapllisto', header_text)
 
         # She is invited to enter a report straight away
         inputbox = self.browser.find_element_by_id('id_new_report')
@@ -40,7 +40,7 @@ class NewVisitorTest(LiveServerTestCase):
         # "Report 1: Something shady happened" as an item in a list
         inputbox.send_keys(Keys.ENTER)
         edith_report_url = self.browser.current_url
-        self.assertRegex(edith_report_url, '/reports/.+')
+        self.assertRegex(edith_report_url, '/profiles/.+')
 
         self.check_for_row_in_report_table('Report 1: Something shady happened')
 
@@ -72,7 +72,7 @@ class NewVisitorTest(LiveServerTestCase):
 
         # Francis gets his own unique URL
         francis_report_url = self.browser.current_url
-        self.assertRegex(francis_report_url, '/reports/.+')
+        self.assertRegex(francis_report_url, '/profiles/.+')
         self.assertNotEqual(francis_report_url, edith_report_url)
 
         # Still no trace of Edith's report

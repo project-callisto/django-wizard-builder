@@ -47,18 +47,18 @@ class ProfileAndReportModelTest(TestCase):
         self.assertEqual(second_saved_report.text, 'Report number two')
         self.assertEqual(second_saved_report.profile, profile)
 
-class ReportViewTest(TestCase):
+class ProfileViewTest(TestCase):
 
-    def test_uses_report_template(self):
-        response = self.client.get('/reports/the-only-report-in-the-world/')
-        self.assertTemplateUsed(response, 'report.html')
+    def test_uses_profile_template(self):
+        response = self.client.get('/profiles/the-only-profile-in-the-world/')
+        self.assertTemplateUsed(response, 'profile.html')
 
     def test_displays_all_items(self):
         profile = Profile.objects.create()
         Report.objects.create(text='reporty 1', profile=profile)
         Report.objects.create(text='reporty 2', profile=profile)
 
-        response = self.client.get('/reports/the-only-report-in-the-world/')
+        response = self.client.get('/profiles/the-only-profile-in-the-world/')
 
         self.assertContains(response, 'reporty 1')
         self.assertContains(response, 'reporty 2')
@@ -66,7 +66,7 @@ class ReportViewTest(TestCase):
 class NewListTest(TestCase):
     def test_home_page_can_save_a_POST_request(self):
         self.client.post(
-            '/reports/new',
+            '/profiles/new',
             data={'report_text': 'A new report'}
         )
         self.assertEqual(Report.objects.count(), 1)
@@ -75,7 +75,7 @@ class NewListTest(TestCase):
 
     def test_home_page_redirects_after_POST(self):
         response = self.client.post(
-            '/reports/new',
+            '/profiles/new',
             data={'report_text': 'A new report'}
         )
-        self.assertRedirects(response, '/reports/the-only-report-in-the-world/')
+        self.assertRedirects(response, '/profiles/the-only-profile-in-the-world/')

@@ -4,11 +4,11 @@ from reports.models import Report, Profile
 def home_page(request):
     return render(request, 'home.html')
 
-def view_report(request):
+def view_profile(request):
     reports = Report.objects.all()
-    return render(request, 'report.html', {'reports': reports})
+    return render(request, 'profile.html', {'reports': reports})
 
-def new_report(request):
+def new_profile(request):
     profile = Profile.objects.create()
     Report.objects.create(text=request.POST['report_text'], profile=profile)
-    return redirect('/reports/the-only-report-in-the-world/')
+    return redirect('/profiles/the-only-profile-in-the-world/')
