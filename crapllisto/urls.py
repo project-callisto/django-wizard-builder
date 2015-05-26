@@ -6,6 +6,6 @@ from reports import urls as report_urls
 urlpatterns = [
     # Examples:
     url(r'^$', 'reports.views.home_page', name='home'),
-    url(r'profiles/', include(report_urls)),
+    url(r'^profiles/', include(report_urls)),
     #url(r'^admin/', include(admin.site.urls)),
 ]

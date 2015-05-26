@@ -1,16 +1,3 @@
-<!DOCTYPE html>
-<html>
-<head lang="en">
-    <meta charset="UTF-8">
-    <title>Crapllisto</title>
-</head>
-<body>
-        <h1>Crapllisto</h1>
-        <h2>Start a new report</h2>
-
-        <form method="POST" action="/profiles/new">
-            <input id="id_new_report" name="report_text" placeholder="Write it down"/>
-            {% csrf_token %}
-        </form>
-</body>
-</html>
+{% extends 'base.html' %}
+{% block header_text %}Start a new report{% endblock %}
+{% block form_action %}/profiles/new{% endblock %}

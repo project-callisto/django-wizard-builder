@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Crapllisto</title>
+</head>
+<body>
+        <h1>Crapllisto</h1>
+        <h2>{% block header_text %}{% endblock %}</h2>
+
+        <form method="POST" action="{% block form_action %}{% endblock %}">
+            <input id="id_new_report" name="report_text" placeholder="Write it down"/>
+            {% csrf_token %}
+        </form>
+        {% block table %}
+        {% endblock %}
+</body>
+</html>

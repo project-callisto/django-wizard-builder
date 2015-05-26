@@ -58,6 +58,8 @@ class NewVisitorTest(LiveServerTestCase):
         # Now a new user, Francis, comes along to the site
 
         ## New browser session w/o cookies, etc
+        self.browser.quit()
+        self.browser = webdriver.Firefox()
 
         # Francis visits the home page. No sign of Edith's report
         self.browser.get(self.live_server_url)
