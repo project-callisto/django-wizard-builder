@@ -79,3 +79,26 @@ class NewVisitorTest(LiveServerTestCase):
         page_text = self.browser.find_element_by_tag_name('body').text
         self.assertNotIn('Something shady happened', page_text)
         self.assertIn('I dunno man', page_text)
+
+    def test_layout_and_styling(self):
+        # Edith goes to the home page
+        self.browser.get(self.live_server_url)
+        self.browser.set_window_size(1024, 768)
+
+        # She notices the report input box is nicely centered
+        inputbox = self.browser.find_element_by_id('id_new_report')
+        self.assertAlmostEqual(
+            inputbox.location['x'] + inputbox.size['width'] / 2,
+            512,
+            delta=5
+        )
+
+        # She starts a new report and sees the input is nicely
+        # centered on the profile page as well
+        inputbox.send_keys('testing\n')
+        inputbox = self.browser.find_element_by_id('id_new_report')
+        self.assertAlmostEqual(
+            inputbox.location['x'] + inputbox.size['width'] / 2,
+            512,
+            delta=5
+        )
