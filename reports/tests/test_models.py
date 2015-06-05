@@ -1,3 +1,4 @@
+from django.core.exceptions import ValidationError
 from django.test import TestCase
 from reports.models import Report, Profile
 
@@ -29,3 +30,10 @@ class ProfileAndReportModelTest(TestCase):
         self.assertEqual(first_saved_report.profile, profile)
         self.assertEqual(second_saved_report.text, 'Report number two')
         self.assertEqual(second_saved_report.profile, profile)
+
+    def test_cannot_save_empty_reports(self):
+        profile = Profile.objects.create()
+        report = Report(profile = profile, text='')
+        with self.assertRaises(ValidationError):
+            report.save()
+            report.full_clean()

@@ -2,6 +2,7 @@ from django.core.urlresolvers import resolve
 from django.test import TestCase
 from django.http import HttpRequest
 from django.template.loader import render_to_string
+from django.utils.html import escape
 
 from reports.views import home_page
 from reports.models import Report, Profile
@@ -62,6 +63,18 @@ class NewProfileTest(TestCase):
         )
         new_profile = Profile.objects.first()
         self.assertRedirects(response, '/profiles/%d/' % (new_profile.id,))
+
+    def test_validation_errors_are_sent_back_to_home_page_template(self):
+        response = self.client.post('/profiles/new', data={'report_text':''})
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'home.html')
+        expected_error = escape("You can't have an empty report")
+        self.assertContains(response, expected_error)
+
+    def test_invalid_reports_arent_saved(self):
+        self.client.post('/profiles/new', data={'report_text':''})
+        self.assertEqual(Profile.objects.count(), 0)
+        self.assertEqual(Report.objects.count(), 0)
 
 class NewReportTest(TestCase):
     def test_can_save_a_POST_request_to_existing_profile(self):
