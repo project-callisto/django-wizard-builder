@@ -17,3 +17,7 @@ class ReportForm(forms.models.ModelForm):
         error_messages = {
             'text': {'required': EMPTY_REPORT_ERROR}
         }
+
+    def save(self, for_profile):
+        self.instance.profile = for_profile
+        return super().save()

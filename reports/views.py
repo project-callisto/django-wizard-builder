@@ -9,27 +9,20 @@ def home_page(request):
 
 def view_profile(request, profile_id):
     profile = Profile.objects.get(id=profile_id)
-    error = None
-
+    form = ReportForm()
     if request.method == 'POST':
-        try:
-            report = Report(text=request.POST['text'], profile=profile)
-            report.full_clean()
-            report.save()
+        form = ReportForm(data=request.POST)
+        if form.is_valid():
+            form.save(for_profile=profile)
             return redirect(profile)
-        except ValidationError:
-            error = "You can't have an empty report"
-
-    return render(request, 'profile.html', {'profile': profile, 'error': error})
+    return render(request, 'profile.html', {
+        'profile': profile, 'form': form})
 
 def new_profile(request):
-    profile = Profile.objects.create()
-    report = Report(text=request.POST['text'], profile=profile)
-    try:
-        report.full_clean()
-        report.save()
-    except ValidationError:
-        profile.delete()
-        error = "You can't have an empty report"
-        return render(request, 'home.html', {"error": error})
-    return redirect(profile)
+    form = ReportForm(data=request.POST)
+    if form.is_valid():
+        profile = Profile.objects.create()
+        form.save(for_profile=profile)
+        return redirect(profile)
+    else:
+        return render(request, 'home.html', {"form": form})

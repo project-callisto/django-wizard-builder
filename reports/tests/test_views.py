@@ -6,7 +6,7 @@ from django.utils.html import escape
 
 from reports.views import home_page
 from reports.models import Report, Profile
-from reports.forms import ReportForm
+from reports.forms import ReportForm, EMPTY_REPORT_ERROR
 
 class HomePageTest(TestCase):
 
@@ -70,15 +70,34 @@ class ProfileViewTest(TestCase):
 
         self.assertRedirects(response, 'profiles/%d/' % correct_profile.id)
 
-    def test_validation_errors_end_up_on_profile_page(self):
+    def post_invalid_input(self):
         profile = Profile.objects.create()
-        response = self.client.post('/profiles/%d/' % (profile.id,),
-                                    data={'text': ''}    )
+        return self.client.post('/profiles/%d/' % (profile.id,),
+                                    data={'text': ''}
+                                    )
+
+    def test_for_invalid_input_nothing_saved_to_db(self):
+        self.post_invalid_input()
+        self.assertEqual(Report.objects.count(), 0)
+
+    def test_for_invalid_input_renders_profile_template(self):
+        response = self.post_invalid_input()
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'profile.html')
-        expected_error = escape("You can't have an empty report")
-        self.assertContains(response, expected_error)
 
+    def test_for_invalid_input_passes_form_to_template(self):
+        response = self.post_invalid_input()
+        self.assertIsInstance(response.context['form'], ReportForm)
+
+    def test_for_invalid_input_shows_error_on_page(self):
+        response = self.post_invalid_input()
+        self.assertContains(response, escape(EMPTY_REPORT_ERROR))
+
+    def test_displays_report_form(self):
+        profile = Profile.objects.create()
+        response = self.client.get('/profiles/%d/' % (profile.id))
+        self.assertIsInstance(response.context['form'], ReportForm)
+        self.assertContains(response, 'name="text"')
 
 class NewProfileTest(TestCase):
     def test_home_page_can_save_a_POST_request(self):
@@ -98,12 +117,18 @@ class NewProfileTest(TestCase):
         new_profile = Profile.objects.first()
         self.assertRedirects(response, '/profiles/%d/' % (new_profile.id,))
 
-    def test_validation_errors_are_sent_back_to_home_page_template(self):
-        response = self.client.post('/profiles/new', data={'text':''})
+    def test_for_invalid_input_renders_home_template(self):
+        response = self.client.post('/profiles/new', data={'text': ''})
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'home.html')
-        expected_error = escape("You can't have an empty report")
-        self.assertContains(response, expected_error)
+
+    def test_validation_errors_are_shwon_on_home_page(self):
+        response = self.client.post('/profiles/new', data={'text': ''})
+        self.assertContains(response, escape(EMPTY_REPORT_ERROR))
+
+    def test_for_invalid_input_passes_form_to_template(self):
+        response = self.client.post('/profiles/new', data={'text': ''})
+        self.assertIsInstance(response.context['form'], ReportForm)
 
     def test_invalid_reports_arent_saved(self):
         self.client.post('/profiles/new', data={'text':''})
