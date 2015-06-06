@@ -46,6 +46,31 @@ class ProfileViewTest(TestCase):
         response = self.client.get('/profiles/%d/' % (correct_profile.id, ))
         self.assertEquals(response.context['profile'], correct_profile)
 
+    def test_can_save_a_POST_request_to_existing_profile(self):
+        other_profile = Profile.objects.create()
+        correct_profile = Profile.objects.create()
+
+        self.client.post(
+            '/profiles/%d/' % correct_profile.id,
+            data={'report_text':'A new report for an existing profile'}
+        )
+
+        self.assertEqual(Report.objects.count(), 1)
+        new_report = Report.objects.first()
+        self.assertEqual(new_report.text, 'A new report for an existing profile')
+        self.assertEqual(new_report.profile, correct_profile)
+
+    def test_POST_redirects_to_profile_view(self):
+        other_profile = Profile.objects.create()
+        correct_profile = Profile.objects.create()
+
+        response = self.client.post(
+            '/profiles/%d/' % correct_profile.id,
+            data={'report_text':'A new report for an existing profile'}
+        )
+
+        self.assertRedirects(response, 'profiles/%d/' % correct_profile.id)
+
 class NewProfileTest(TestCase):
     def test_home_page_can_save_a_POST_request(self):
         self.client.post(
@@ -75,29 +100,3 @@ class NewProfileTest(TestCase):
         self.client.post('/profiles/new', data={'report_text':''})
         self.assertEqual(Profile.objects.count(), 0)
         self.assertEqual(Report.objects.count(), 0)
-
-class NewReportTest(TestCase):
-    def test_can_save_a_POST_request_to_existing_profile(self):
-        other_profile = Profile.objects.create()
-        correct_profile = Profile.objects.create()
-
-        self.client.post(
-            '/profiles/%d/add_report' % correct_profile.id,
-            data={'report_text':'A new report for an existing profile'}
-        )
-
-        self.assertEqual(Report.objects.count(), 1)
-        new_report = Report.objects.first()
-        self.assertEqual(new_report.text, 'A new report for an existing profile')
-        self.assertEqual(new_report.profile, correct_profile)
-
-    def test_redirects_to_profile_view(self):
-        other_profile = Profile.objects.create()
-        correct_profile = Profile.objects.create()
-
-        response = self.client.post(
-            '/profiles/%d/add_report' % correct_profile.id,
-            data={'report_text':'A new report for an existing profile'}
-        )
-
-        self.assertRedirects(response, 'profiles/%d/' % correct_profile.id)

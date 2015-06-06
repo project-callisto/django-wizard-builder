@@ -7,6 +7,9 @@ def home_page(request):
 
 def view_profile(request, profile_id):
     profile = Profile.objects.get(id=profile_id)
+    if request.method == 'POST':
+        Report.objects.create(text=request.POST['report_text'], profile=profile)
+        return redirect('/profiles/%d/' % (profile.id,))
     return render(request, 'profile.html', {'profile': profile})
 
 def new_profile(request):
@@ -19,9 +22,4 @@ def new_profile(request):
         profile.delete()
         error = "You can't have an empty report"
         return render(request, 'home.html', {"error": error})
-    return redirect('/profiles/%d/' % (profile.id,))
-
-def add_report(request, profile_id):
-    profile = Profile.objects.get(id=profile_id)
-    Report.objects.create(text=request.POST['report_text'], profile=profile)
     return redirect('/profiles/%d/' % (profile.id,))

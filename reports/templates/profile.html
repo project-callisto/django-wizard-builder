@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% block header_text %}Your reports{% endblock %}
-{% block form_action %}/profiles/{{ profile.id }}/add_report{% endblock %}
+{% block form_action %}/profiles/{{ profile.id }}/{% endblock %}
 {% block table %}
         <table id="id_report_table" class="table">
             {% for report in profile.report_set.all %}
