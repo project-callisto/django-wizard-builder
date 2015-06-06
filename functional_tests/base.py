@@ -29,3 +29,6 @@ class FunctionalTest(StaticLiveServerTestCase):
         table = self.browser.find_element_by_id('id_report_table')
         rows = table.find_elements_by_tag_name('tr')
         self.assertIn(row_text, [row.text for row in rows])
+
+    def get_report_input_box(self):
+        return self.browser.find_element_by_id('id_text')

@@ -13,7 +13,7 @@ def view_profile(request, profile_id):
 
     if request.method == 'POST':
         try:
-            report = Report(text=request.POST['report_text'], profile=profile)
+            report = Report(text=request.POST['text'], profile=profile)
             report.full_clean()
             report.save()
             return redirect(profile)
@@ -24,7 +24,7 @@ def view_profile(request, profile_id):
 
 def new_profile(request):
     profile = Profile.objects.create()
-    report = Report(text=request.POST['report_text'], profile=profile)
+    report = Report(text=request.POST['text'], profile=profile)
     try:
         report.full_clean()
         report.save()

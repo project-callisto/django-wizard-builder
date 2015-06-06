@@ -14,7 +14,7 @@ class NewVisitorTest(FunctionalTest):
         self.assertIn('Crapllisto', header_text)
 
         # She is invited to enter a report straight away
-        inputbox = self.browser.find_element_by_id('id_new_report')
+        inputbox = self.get_report_input_box()
         self.assertEqual(
             inputbox.get_attribute('placeholder'),
             'Write it down'
@@ -32,7 +32,7 @@ class NewVisitorTest(FunctionalTest):
         self.check_for_row_in_report_table('Report 1: Something shady happened')
 
         # She enters another report
-        inputbox = self.browser.find_element_by_id('id_new_report')
+        inputbox = self.get_report_input_box()
         inputbox.send_keys('Another shady thing went down')
 
         # When she hits enter, the page updates, and now the page lists
@@ -55,7 +55,7 @@ class NewVisitorTest(FunctionalTest):
         self.assertNotIn('Another shady thing went down', page_text)
 
         # Francis starts a new report himself
-        inputbox = self.browser.find_element_by_id('id_new_report')
+        inputbox = self.get_report_input_box()
         inputbox.send_keys('I dunno man')
         inputbox.send_keys(Keys.ENTER)
 

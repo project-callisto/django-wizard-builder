@@ -51,7 +51,7 @@ class ProfileViewTest(TestCase):
 
         self.client.post(
             '/profiles/%d/' % correct_profile.id,
-            data={'report_text':'A new report for an existing profile'}
+            data={'text':'A new report for an existing profile'}
         )
 
         self.assertEqual(Report.objects.count(), 1)
@@ -65,7 +65,7 @@ class ProfileViewTest(TestCase):
 
         response = self.client.post(
             '/profiles/%d/' % correct_profile.id,
-            data={'report_text':'A new report for an existing profile'}
+            data={'text':'A new report for an existing profile'}
         )
 
         self.assertRedirects(response, 'profiles/%d/' % correct_profile.id)
@@ -73,7 +73,7 @@ class ProfileViewTest(TestCase):
     def test_validation_errors_end_up_on_profile_page(self):
         profile = Profile.objects.create()
         response = self.client.post('/profiles/%d/' % (profile.id,),
-                                    data={'report_text': ''}    )
+                                    data={'text': ''}    )
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'profile.html')
         expected_error = escape("You can't have an empty report")
@@ -84,7 +84,7 @@ class NewProfileTest(TestCase):
     def test_home_page_can_save_a_POST_request(self):
         self.client.post(
             '/profiles/new',
-            data={'report_text': 'A new report'}
+            data={'text': 'A new report'}
         )
         self.assertEqual(Report.objects.count(), 1)
         new_report = Report.objects.first()
@@ -93,19 +93,19 @@ class NewProfileTest(TestCase):
     def test_home_page_redirects_after_POST(self):
         response = self.client.post(
             '/profiles/new',
-            data={'report_text': 'A new report'}
+            data={'text': 'A new report'}
         )
         new_profile = Profile.objects.first()
         self.assertRedirects(response, '/profiles/%d/' % (new_profile.id,))
 
     def test_validation_errors_are_sent_back_to_home_page_template(self):
-        response = self.client.post('/profiles/new', data={'report_text':''})
+        response = self.client.post('/profiles/new', data={'text':''})
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'home.html')
         expected_error = escape("You can't have an empty report")
         self.assertContains(response, expected_error)
 
     def test_invalid_reports_arent_saved(self):
-        self.client.post('/profiles/new', data={'report_text':''})
+        self.client.post('/profiles/new', data={'text':''})
         self.assertEqual(Profile.objects.count(), 0)
         self.assertEqual(Report.objects.count(), 0)
