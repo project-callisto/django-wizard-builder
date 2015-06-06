@@ -14,7 +14,7 @@ def view_profile(request, profile_id):
             report = Report(text=request.POST['report_text'], profile=profile)
             report.full_clean()
             report.save()
-            return redirect('/profiles/%d/' % (profile.id,))
+            return redirect(profile)
         except ValidationError:
             error = "You can't have an empty report"
 
@@ -30,4 +30,4 @@ def new_profile(request):
         profile.delete()
         error = "You can't have an empty report"
         return render(request, 'home.html', {"error": error})
-    return redirect('/profiles/%d/' % (profile.id,))
+    return redirect(profile)

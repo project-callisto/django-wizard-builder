@@ -37,3 +37,7 @@ class ProfileAndReportModelTest(TestCase):
         with self.assertRaises(ValidationError):
             report.save()
             report.full_clean()
+
+    def test_get_absolute_url(self):
+        profile = Profile.objects.create()
+        self.assertEqual(profile.get_absolute_url(), '/profiles/%d/' % (profile.id,))
