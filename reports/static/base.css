@@ -1,3 +1,8 @@
 #id_text {
     margin-top: 2ex;
 }
+
+.errorlist {
+    list-style: none;
+    padding-left:0;
+}
