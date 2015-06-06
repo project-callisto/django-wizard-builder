@@ -8,7 +8,7 @@ def home_page(request):
 def view_profile(request, profile_id):
     profile = Profile.objects.get(id=profile_id)
     error = None
-    
+
     if request.method == 'POST':
         try:
             report = Report(text=request.POST['report_text'], profile=profile)

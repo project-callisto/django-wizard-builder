@@ -1,3 +1,3 @@
 {% extends 'base.html' %}
 {% block header_text %}Start a new report{% endblock %}
-{% block form_action %}/profiles/new{% endblock %}
+{% block form_action %}{% url 'new_profile' %}{% endblock %}
