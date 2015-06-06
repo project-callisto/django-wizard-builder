@@ -17,9 +17,7 @@
                 <h1>Crapllisto</h1>
                 <h2>{% block header_text %}{% endblock %}</h2>
                 <form method="POST" action="{% block form_action %}{% endblock %}">
-                    <input id="id_new_report" name="report_text"
-                           class="form-control input-lg"
-                           placeholder="Write it down" />
+                    {{ form.text }}
                     {% csrf_token %}
                     {% if error %}
                     <div class="form-group has-error">
