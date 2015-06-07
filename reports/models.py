@@ -8,3 +8,9 @@ class Profile(models.Model):
 class Report(models.Model):
     text = models.TextField(default='')
     profile = models.ForeignKey(Profile, default=None)
+
+    def __str__(self):
+        return self.text
+
+    class Meta:
+        ordering = ('id',)

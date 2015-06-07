@@ -2,34 +2,20 @@ from django.core.exceptions import ValidationError
 from django.test import TestCase
 from reports.models import Report, Profile
 
-class ProfileAndReportModelTest(TestCase):
+class ProfileModelTest(TestCase):
 
-    def test_saving_and_retrieving_items(self):
-        profile = Profile()
-        profile.save()
+    def test_default_text(self):
+        report = Report()
+        self.assertEqual(report.text, '')
 
-        first_report = Report()
-        first_report.text = 'The first report ever'
-        first_report.profile = profile
-        first_report.save()
+class ReportModelTest(TestCase):
 
-        second_report = Report()
-        second_report.text = 'Report number two'
-        second_report.profile = profile
-        second_report.save()
-
-        saved_profile = Profile.objects.first()
-        self.assertEqual(saved_profile, profile)
-
-        saved_reports = Report.objects.all()
-        self.assertEqual(saved_reports.count(), 2)
-
-        first_saved_report = saved_reports[0]
-        second_saved_report = saved_reports[1]
-        self.assertEqual(first_saved_report.text, 'The first report ever')
-        self.assertEqual(first_saved_report.profile, profile)
-        self.assertEqual(second_saved_report.text, 'Report number two')
-        self.assertEqual(second_saved_report.profile, profile)
+    def test_report_is_related_to_profile(self):
+        profile = Profile.objects.create()
+        report = Report()
+        report.profile = profile
+        report.save()
+        self.assertIn(report, profile.report_set.all())
 
     def test_cannot_save_empty_reports(self):
         profile = Profile.objects.create()
@@ -41,3 +27,17 @@ class ProfileAndReportModelTest(TestCase):
     def test_get_absolute_url(self):
         profile = Profile.objects.create()
         self.assertEqual(profile.get_absolute_url(), '/profiles/%d/' % (profile.id,))
+
+    def test_report_ordering(self):
+        profile = Profile.objects.create()
+        report1 = Report.objects.create(profile=profile, text='first report')
+        report2 = Report.objects.create(profile=profile, text='2 report')
+        report3 = Report.objects.create(profile=profile, text='report #3')
+        self.assertEqual(
+            list(Report.objects.all()),
+            [report1, report2, report3]
+        )
+
+    def test_string_representation(self):
+        report = Report(text='some report')
+        self.assertEqual(str(report), 'some report')
