@@ -18,6 +18,11 @@ class HomePageTest(TestCase):
         response = self.client.get('/')
         self.assertIsInstance(response.context['form'], ReportForm)
 
+class SignupTest(TestCase):
+    def test_signup_page_renders_signup_template(self):
+        response = self.client.get('/signup/')
+        self.assertTemplateUsed(response, 'signup.html')
+
 class ProfileViewTest(TestCase):
     def test_uses_profile_template(self):
         profile = Profile.objects.create()

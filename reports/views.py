@@ -1,5 +1,6 @@
 from django.core.exceptions import ValidationError
 from django.shortcuts import redirect, render
+from django.http import HttpResponse
 
 from reports.models import Report, Profile
 from reports.forms import ReportForm
@@ -26,3 +27,6 @@ def new_profile(request):
         return redirect(profile)
     else:
         return render(request, 'home.html', {"form": form})
+
+def signup(request):
+    return render(request, 'signup.html')

@@ -7,5 +7,6 @@ urlpatterns = [
     # Examples:
     url(r'^$', 'reports.views.home_page', name='home'),
     url(r'^profiles/', include(report_urls)),
+    url(r'^signup/', 'reports.views.signup', name = 'signup'),
     #url(r'^admin/', include(admin.site.urls)),
 ]

@@ -8,7 +8,7 @@ class LoginTest(FunctionalTest):
             lambda b: b.find_element_by_id(element_id)
         )
 
-    def test_login(self):
+    def test_signup(self):
         # Edith goes to the awesome Callisto site
         # and notices a "Sign in" link for the first time.
         self.browser.get(self.server_url)
