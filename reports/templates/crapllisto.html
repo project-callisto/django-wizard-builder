@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block content %}
+    <div class="row">
+        <div class="col-md-6 col-md-offset-3 jumbotron">
+            <div class="text-center">
+                <h1>Crapllisto</h1>
+                <h2>{% block header_text %}{% endblock %}</h2>
+                <form method="POST" action="{% block form_action %}{% endblock %}">
+                    {% if form.errors %}
+                    <div class="form-group has-error">
+                        <span class="help-block">{{ form.text.errors }}</span>
+                    </div>
+                    {% endif %}
+                    {{ form.text }}
+                    {% csrf_token %}
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+            {% block table %}
+            {% endblock %}
+        </div>
+    </div>
+{% endblock %}
