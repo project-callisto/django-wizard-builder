@@ -1,3 +1,4 @@
+{% load bootstrap3 %}
 <!DOCTYPE html>
 <html>
 <head lang="en">
@@ -5,8 +6,10 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Callisto</title>
-    <link href="/static/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link href="/static/base.css" rel="stylesheet">
+
+    {# Load CSS and JavaScript #}
+    {% bootstrap_css %}
 </head>
 <body>
 <div class="container">
@@ -25,7 +28,7 @@
     {% block content %}{% endblock %}
 
 </div>
-<script src="http://code.jquery.com/jquery.min.js"></script>
+{% bootstrap_javascript jquery=1 %}
 <script src="/static/report.js"></script>
 </body>
 </html>

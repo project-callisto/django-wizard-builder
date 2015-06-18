@@ -32,6 +32,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'reports',
+    'bootstrap3',
 )
 
 DATABASES = {}
