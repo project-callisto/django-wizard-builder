@@ -3,6 +3,8 @@ from django.test import TestCase
 from django.http import HttpRequest
 from django.template.loader import render_to_string
 from django.utils.html import escape
+from django.contrib.auth.forms import UserCreationForm
+
 
 from reports.views import home_page
 from reports.models import Report, Profile
@@ -22,6 +24,11 @@ class SignupTest(TestCase):
     def test_signup_page_renders_signup_template(self):
         response = self.client.get('/signup/')
         self.assertTemplateUsed(response, 'signup.html')
+
+    def test_displays_signup_form(self):
+        response = self.client.get('/signup/')
+        self.assertIsInstance(response.context['form'], UserCreationForm)
+        self.assertContains(response, 'name="username"')
 
 class ProfileViewTest(TestCase):
     def test_uses_profile_template(self):

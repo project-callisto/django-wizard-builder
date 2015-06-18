@@ -20,13 +20,13 @@ class LoginTest(FunctionalTest):
 
         # Edith signs up with her email address
         self.browser.find_element_by_id(
-            'authentication_email'
+            'id_username'
         ).send_keys('edith@notrealemail.com')
         self.browser.find_element_by_id(
-            'password'
+            'id_password1'
         ).send_keys('password')
         self.browser.find_element_by_id(
-            'password_confirmation'
+            'id_password2'
         ).send_keys('password')
         self.browser.find_element_by_tag_name('button').click()
 

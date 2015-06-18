@@ -1,2 +1,20 @@
-{% extends 'base.html' %}
-{% block content %}form goes here{% endblock %}
+{% extends 'crapllisto.html' %}
+{% block content %}
+    <div class="row">
+        <div class="col-md-6 col-md-offset-3 jumbotron">
+            <div class="text-center">
+                <h1>Callisto</h1>
+                <h2>Create a new account</h2>
+                <form method="POST" action="#">
+                    {% if form.errors %}
+                    <div class="form-group has-error">
+                        <span class="help-block">{{ form.text.errors }}</span>
+                    </div>
+                    {% endif %}
+                    {{ form.as_p }}
+                    {% csrf_token %}
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
