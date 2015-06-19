@@ -9,7 +9,7 @@ class NewVisitorTest(FunctionalTest):
         self.browser.get(self.server_url)
 
         # She notices the page title and header mentions Callisto
-        self.assertIn('Crapllisto', self.browser.title)
+        self.assertIn('Callisto', self.browser.title)
         header_text = self.browser.find_element_by_tag_name('h1').text
         self.assertIn('Crapllisto', header_text)
 

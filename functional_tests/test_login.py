@@ -32,9 +32,8 @@ class LoginTest(FunctionalTest):
 
         # She can see that she is logged in
         self.wait_for_element_with_id('id_logout')
-        # She is on an interstitial page explaining record
-        encouragement = self.browser.find_element_by_id('.encouragement')
-        self.assertIn("Now we'll begin", encouragement.text)
+        # TK: what page do you go to after login?
 
     #TK: test sign up validation, including duplicate username
     #TK: test login
+    #TK: test logout

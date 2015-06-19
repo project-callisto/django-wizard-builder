@@ -20,7 +20,13 @@
           <a class="navbar-brand" href="/">Callisto</a>
         </div>
         <ul class="nav navbar-nav navbar-right">
-            <li><a href="/signup" id="id_signup">Sign up</a></li>
+            <li>
+                {% if user.is_authenticated %}
+                    <a href="/logout" id="id_logout">Log out</a>
+                {% else %}
+                    <a href="/signup" id="id_signup">Sign up</a>
+                {% endif %}
+            </li>
         </ul>
       </div>
     </nav>
