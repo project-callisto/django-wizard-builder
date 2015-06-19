@@ -35,3 +35,6 @@ class LoginTest(FunctionalTest):
         # She is on an interstitial page explaining record
         encouragement = self.browser.find_element_by_id('.encouragement')
         self.assertIn("Now we'll begin", encouragement.text)
+
+    #TK: test sign up validation, including duplicate username
+    #TK: test login

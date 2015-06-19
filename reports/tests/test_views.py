@@ -4,7 +4,9 @@ from django.http import HttpRequest
 from django.template.loader import render_to_string
 from django.utils.html import escape
 from django.contrib.auth.forms import UserCreationForm
-
+from django.contrib.auth import get_user_model, SESSION_KEY
+from unittest.mock import patch
+User = get_user_model()
 
 from reports.views import home_page
 from reports.models import Report, Profile
@@ -29,6 +31,29 @@ class SignupTest(TestCase):
         response = self.client.get('/signup/')
         self.assertIsInstance(response.context['form'], UserCreationForm)
         self.assertContains(response, 'name="username"')
+
+    @patch('django.contrib.auth.authenticate')
+    def test_signup_calls_authenticate(
+        self, mock_authenticate
+    ):
+        mock_authenticate.return_value = None
+        self.client.post('/signup/',
+                         {'username': 'test1',
+                          'password1': 'password',
+                          'password2': 'password'})
+        mock_authenticate.assert_called_once()
+
+    @patch('django.contrib.auth.authenticate')
+    def test_user_gets_logged_in_after_signup(
+            self, mock_authenticate
+    ):
+        mock_authenticate.side_effect = lambda: User.objects.get(username='test')
+        response = self.client.post('/signup/',
+                         {'username': 'test',
+                          'password1': 'password',
+                          'password2': 'password'})
+        self.assertEqual(response.client.session[SESSION_KEY], str(User.objects.get(username="test").pk))
+
 
 class ProfileViewTest(TestCase):
     def test_uses_profile_template(self):

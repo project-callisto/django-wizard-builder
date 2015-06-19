@@ -1,6 +1,9 @@
 from django.core.exceptions import ValidationError
 from django.shortcuts import redirect, render
 from django.http import HttpResponse
+from django.contrib.auth import authenticate, login
+from django.contrib.auth.forms import UserCreationForm
+from django.views.generic import FormView
 
 from reports.models import Report, Profile
 from reports.forms import ReportForm
@@ -28,5 +31,17 @@ def new_profile(request):
     else:
         return render(request, 'home.html', {"form": form})
 
-def signup(request):
-    return render(request, 'signup.html')
+class SignupView(FormView):
+   template_name = 'signup.html'
+   form_class = UserCreationForm
+   success_url='/'
+
+   def form_valid(self, form):
+      #save the new user first
+      form.save()
+      #login new user
+      username = form.cleaned_data['username']
+      password = form.cleaned_data['password1']
+      user = authenticate(username=username, password=password)
+      login(self.request, user)
+      return super(SignupView, self).form_valid(form)
