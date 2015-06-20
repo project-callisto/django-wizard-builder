@@ -24,11 +24,11 @@ class HomePageTest(TestCase):
 
 class SignupTest(TestCase):
     def test_signup_page_renders_signup_template(self):
-        response = self.client.get('/signup/')
+        response = self.client.get('/signup')
         self.assertTemplateUsed(response, 'signup.html')
 
     def test_displays_signup_form(self):
-        response = self.client.get('/signup/')
+        response = self.client.get('/signup')
         self.assertIsInstance(response.context['form'], UserCreationForm)
         self.assertContains(response, 'name="username"')
 
@@ -37,7 +37,7 @@ class SignupTest(TestCase):
         self, mock_authenticate
     ):
         mock_authenticate.return_value = None
-        self.client.post('/signup/',
+        self.client.post('/signup',
                          {'username': 'test1',
                           'password1': 'password',
                           'password2': 'password'})
@@ -48,7 +48,7 @@ class SignupTest(TestCase):
             self, mock_authenticate
     ):
         mock_authenticate.side_effect = lambda: User.objects.get(username='test')
-        response = self.client.post('/signup/',
+        response = self.client.post('/signup',
                          {'username': 'test',
                           'password1': 'password',
                           'password2': 'password'})

@@ -22,9 +22,9 @@
         <ul class="nav navbar-nav navbar-right">
             <li>
                 {% if user.is_authenticated %}
-                    <a href="/logout" id="id_logout">Log out</a>
+                    <a href="{% url 'logout' %}" id="id_logout">Log out</a>
                 {% else %}
-                    <a href="/signup" id="id_signup">Sign up</a>
+                    <a href="{% url 'signup' %}" id="id_signup">Sign up</a>
                 {% endif %}
             </li>
         </ul>
