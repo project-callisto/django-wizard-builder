@@ -4,7 +4,7 @@ from selenium.common.exceptions import NoSuchElementException
 from django.contrib.auth import get_user_model
 User = get_user_model()
 
-class LoginTest(FunctionalTest):
+class AuthenticationTest(FunctionalTest):
 
     def wait_for_element_with_id(self, element_id):
         WebDriverWait(self.browser, timeout=30).until(
