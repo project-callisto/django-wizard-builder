@@ -10,7 +10,7 @@ from django.contrib.sessions.models import Session
 
 User = get_user_model()
 
-from reports.views import home_page, SIGNUP_ERROR
+from reports.views import SIGNUP_ERROR
 from reports.models import Report, Profile
 from reports.forms import ReportForm, EMPTY_REPORT_ERROR
 
@@ -35,7 +35,7 @@ class SignupViewTest(TestCase):
         self.assertContains(response, 'name="username"')
 
     @patch('reports.views.authenticate')
-    def authentication_failure_displays_error(
+    def test_authentication_failure_displays_error(
         self, mock_authenticate
     ):
         mock_authenticate.return_value = None
@@ -43,7 +43,15 @@ class SignupViewTest(TestCase):
                          {'username': 'test1',
                           'password1': 'password',
                           'password2': 'password'})
-        self.assertContains(response, escape(EMPTY_REPORT_ERROR))
+        print(response)
+        self.assertContains(response, escape(SIGNUP_ERROR))
+
+    def test_password_fields_must_match(self):
+        response = self.client.post('/signup',
+                         {'username': 'test',
+                          'password1': 'password',
+                          'password2': 'password3'})
+        self.assertContains(response, escape("The two password fields didn't match."))
 
     def test_user_gets_logged_in_after_signup(self):
         response = self.client.post('/signup',
