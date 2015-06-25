@@ -3,7 +3,7 @@ from django.test import TestCase
 from django.http import HttpRequest
 from django.template.loader import render_to_string
 from django.utils.html import escape
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth import get_user_model, SESSION_KEY
 from unittest.mock import patch
 User = get_user_model()
@@ -22,7 +22,7 @@ class HomePageTest(TestCase):
         response = self.client.get('/')
         self.assertIsInstance(response.context['form'], ReportForm)
 
-class SignupTest(TestCase):
+class SignupViewTest(TestCase):
     def test_signup_page_renders_signup_template(self):
         response = self.client.get('/signup')
         self.assertTemplateUsed(response, 'signup.html')
@@ -54,6 +54,15 @@ class SignupTest(TestCase):
                           'password2': 'password'})
         self.assertEqual(response.client.session[SESSION_KEY], str(User.objects.get(username="test").pk))
 
+class LoginViewTest(TestCase):
+    def test_login_page_renders_login_template(self):
+        response = self.client.get('/login')
+        self.assertTemplateUsed(response, 'login.html')
+
+    def test_displays_login_form(self):
+        response = self.client.get('/login')
+        self.assertIsInstance(response.context['form'], AuthenticationForm)
+        self.assertContains(response, 'name="username"')
 
 class ProfileViewTest(TestCase):
     def test_uses_profile_template(self):
