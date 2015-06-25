@@ -35,7 +35,7 @@ class AuthenticationTest(FunctionalTest):
         # Edith signs up with her email address
         self.browser.find_element_by_id(
             'id_username'
-        ).send_keys('edith@notrealemail.com')
+        ).send_keys('edith_username')
         self.browser.find_element_by_id(
             'id_password1'
         ).send_keys('password')
@@ -65,7 +65,7 @@ class AuthenticationTest(FunctionalTest):
 
     def test_login(self):
         # Edith has been to the Callisto site before and created an account
-        User.objects.create(email='edith@secondvisit.com',
+        User.objects.create_user(username='edith_secondvisit',
                                    password="password")
 
         # On visiting again, she sees a login link
@@ -79,7 +79,7 @@ class AuthenticationTest(FunctionalTest):
         # Edith logs in
         self.browser.find_element_by_id(
             'id_username'
-        ).send_keys('edith@secondvisit.com')
+        ).send_keys('edith_secondvisit')
         self.browser.find_element_by_id(
             'id_password'
         ).send_keys('password')
