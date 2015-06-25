@@ -43,7 +43,6 @@ class SignupViewTest(TestCase):
                          {'username': 'test1',
                           'password1': 'password',
                           'password2': 'password'})
-        print(response)
         self.assertContains(response, escape(SIGNUP_ERROR))
 
     def test_password_fields_must_match(self):
@@ -69,6 +68,21 @@ class LoginViewTest(TestCase):
         response = self.client.get('/login')
         self.assertIsInstance(response.context['form'], AuthenticationForm)
         self.assertContains(response, 'name="username"')
+
+    def test_user_doesnt_get_logged_in_if_authenticate_fails(self):
+        response = self.client.post('/login',
+                         {'username': 'thisuserdoesntexist',
+                          'password': 'password'})
+        self.assertNotIn(SESSION_KEY, response.client.session)
+        self.assertContains(response, escape("Please enter a correct username and password."))
+
+
+    def test_user_gets_logged_in_if_authenticate_succeeds(self):
+        User.objects.create_user(username='test_login', password='password')
+        response = self.client.post('/login',
+                         {'username': 'test_login',
+                          'password': 'password'})
+        self.assertEqual(response.client.session[SESSION_KEY], str(User.objects.get(username="test_login").pk))
 
 class ProfileViewTest(TestCase):
     def test_uses_profile_template(self):
