@@ -8,6 +8,8 @@ from django.views.generic import FormView
 from reports.models import Report, Profile
 from reports.forms import ReportForm
 
+SIGNUP_ERROR='There was an error creating your account. Please email contact@projectcallisto.org if it persists.'
+
 def home_page(request):
     return render(request, 'home.html', {'form': ReportForm()})
 
@@ -43,5 +45,8 @@ class SignupView(FormView):
       username = form.cleaned_data['username']
       password = form.cleaned_data['password1']
       user = authenticate(username=username, password=password)
-      login(self.request, user)
+      if user is not None and user.is_active:
+        login(self.request, user)
+      else:
+        form.add_error(None, ValidationError(SIGNUP_ERROR, code='signup_error'))
       return super(SignupView, self).form_valid(form)

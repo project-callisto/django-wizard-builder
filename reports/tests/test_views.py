@@ -4,11 +4,13 @@ from django.http import HttpRequest
 from django.template.loader import render_to_string
 from django.utils.html import escape
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-from django.contrib.auth import get_user_model, SESSION_KEY
+from django.contrib.auth import get_user_model, SESSION_KEY, BACKEND_SESSION_KEY
 from unittest.mock import patch
+from django.contrib.sessions.models import Session
+
 User = get_user_model()
 
-from reports.views import home_page
+from reports.views import home_page, SIGNUP_ERROR
 from reports.models import Report, Profile
 from reports.forms import ReportForm, EMPTY_REPORT_ERROR
 
@@ -32,22 +34,18 @@ class SignupViewTest(TestCase):
         self.assertIsInstance(response.context['form'], UserCreationForm)
         self.assertContains(response, 'name="username"')
 
-    @patch('django.contrib.auth.authenticate')
-    def test_signup_calls_authenticate(
+    @patch('reports.views.authenticate')
+    def authentication_failure_displays_error(
         self, mock_authenticate
     ):
         mock_authenticate.return_value = None
-        self.client.post('/signup',
+        response = self.client.post('/signup',
                          {'username': 'test1',
                           'password1': 'password',
                           'password2': 'password'})
-        mock_authenticate.assert_called_once()
+        self.assertContains(response, escape(EMPTY_REPORT_ERROR))
 
-    @patch('django.contrib.auth.authenticate')
-    def test_user_gets_logged_in_after_signup(
-            self, mock_authenticate
-    ):
-        mock_authenticate.side_effect = lambda: User.objects.get(username='test')
+    def test_user_gets_logged_in_after_signup(self):
         response = self.client.post('/signup',
                          {'username': 'test',
                           'password1': 'password',
@@ -168,7 +166,7 @@ class NewProfileTest(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'home.html')
 
-    def test_validation_errors_are_shwon_on_home_page(self):
+    def test_validation_errors_are_shown_on_home_page(self):
         response = self.client.post('/profiles/new', data={'text': ''})
         self.assertContains(response, escape(EMPTY_REPORT_ERROR))
 
