@@ -9,7 +9,7 @@ from reports import urls as report_urls
 urlpatterns = [
     # Examples:
     url(r'^$', 'reports.views.home_page', name='home'),
-    url(r'^profiles/', include(report_urls)),
+    url(r'^reports/', include(report_urls)),
     url(r'^signup$', SignupView.as_view(), name='signup'),
     url(r'^logout$', logout, {'next_page': '/'}, name='logout'),
     url(r'^login$', login, {'template_name': 'login.html'}, name='login')

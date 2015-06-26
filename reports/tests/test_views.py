@@ -87,7 +87,7 @@ class LoginViewTest(TestCase):
 class ProfileViewTest(TestCase):
     def test_uses_profile_template(self):
         profile = Profile.objects.create()
-        response = self.client.get('/profiles/%d/' % (profile.id,))
+        response = self.client.get('/reports/%d/' % (profile.id,))
         self.assertTemplateUsed(response, 'profile.html')
 
     def test_displays_only_reports_for_that_profile(self):
@@ -98,7 +98,7 @@ class ProfileViewTest(TestCase):
         Report.objects.create(text='other reporty 1', profile=other_profile)
         Report.objects.create(text='other reporty 2', profile=other_profile)
 
-        response = self.client.get('/profiles/%d/' % (correct_profile.id,))
+        response = self.client.get('/reports/%d/' % (correct_profile.id,))
 
         self.assertContains(response, 'reporty 1')
         self.assertContains(response, 'reporty 2')
@@ -108,7 +108,7 @@ class ProfileViewTest(TestCase):
     def test_passes_correct_profile_to_template(self):
         other_profile = Profile.objects.create()
         correct_profile = Profile.objects.create()
-        response = self.client.get('/profiles/%d/' % (correct_profile.id, ))
+        response = self.client.get('/reports/%d/' % (correct_profile.id, ))
         self.assertEquals(response.context['profile'], correct_profile)
 
     def test_can_save_a_POST_request_to_existing_profile(self):
@@ -116,7 +116,7 @@ class ProfileViewTest(TestCase):
         correct_profile = Profile.objects.create()
 
         self.client.post(
-            '/profiles/%d/' % correct_profile.id,
+            '/reports/%d/' % correct_profile.id,
             data={'text':'A new report for an existing profile'}
         )
 
@@ -130,15 +130,15 @@ class ProfileViewTest(TestCase):
         correct_profile = Profile.objects.create()
 
         response = self.client.post(
-            '/profiles/%d/' % correct_profile.id,
+            '/reports/%d/' % correct_profile.id,
             data={'text':'A new report for an existing profile'}
         )
 
-        self.assertRedirects(response, 'profiles/%d/' % correct_profile.id)
+        self.assertRedirects(response, '/reports/%d/' % correct_profile.id)
 
     def post_invalid_input(self):
         profile = Profile.objects.create()
-        return self.client.post('/profiles/%d/' % (profile.id,),
+        return self.client.post('/reports/%d/' % (profile.id,),
                                     data={'text': ''}
                                     )
 
@@ -161,14 +161,14 @@ class ProfileViewTest(TestCase):
 
     def test_displays_report_form(self):
         profile = Profile.objects.create()
-        response = self.client.get('/profiles/%d/' % (profile.id))
+        response = self.client.get('/reports/%d/' % (profile.id))
         self.assertIsInstance(response.context['form'], ReportForm)
         self.assertContains(response, 'name="text"')
 
 class NewProfileTest(TestCase):
     def test_home_page_can_save_a_POST_request(self):
         self.client.post(
-            '/profiles/new',
+            '/reports/new',
             data={'text': 'A new report'}
         )
         self.assertEqual(Report.objects.count(), 1)
@@ -177,26 +177,26 @@ class NewProfileTest(TestCase):
 
     def test_home_page_redirects_after_POST(self):
         response = self.client.post(
-            '/profiles/new',
+            '/reports/new',
             data={'text': 'A new report'}
         )
         new_profile = Profile.objects.first()
-        self.assertRedirects(response, '/profiles/%d/' % (new_profile.id,))
+        self.assertRedirects(response, '/reports/%d/' % (new_profile.id,))
 
     def test_for_invalid_input_renders_home_template(self):
-        response = self.client.post('/profiles/new', data={'text': ''})
+        response = self.client.post('/reports/new', data={'text': ''})
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'home.html')
 
     def test_validation_errors_are_shown_on_home_page(self):
-        response = self.client.post('/profiles/new', data={'text': ''})
+        response = self.client.post('/reports/new', data={'text': ''})
         self.assertContains(response, escape(EMPTY_REPORT_ERROR))
 
     def test_for_invalid_input_passes_form_to_template(self):
-        response = self.client.post('/profiles/new', data={'text': ''})
+        response = self.client.post('/reports/new', data={'text': ''})
         self.assertIsInstance(response.context['form'], ReportForm)
 
     def test_invalid_reports_arent_saved(self):
-        self.client.post('/profiles/new', data={'text':''})
+        self.client.post('/reports/new', data={'text':''})
         self.assertEqual(Profile.objects.count(), 0)
         self.assertEqual(Report.objects.count(), 0)

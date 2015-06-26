@@ -27,7 +27,7 @@ class NewVisitorTest(FunctionalTest):
         # "Report 1: Something shady happened" as an item in a list
         inputbox.send_keys(Keys.ENTER)
         edith_report_url = self.browser.current_url
-        self.assertRegex(edith_report_url, '/profiles/.+')
+        self.assertRegex(edith_report_url, '/reports/.+')
 
         self.check_for_row_in_report_table('Report 1: Something shady happened')
 
@@ -61,7 +61,7 @@ class NewVisitorTest(FunctionalTest):
 
         # Francis gets his own unique URL
         francis_report_url = self.browser.current_url
-        self.assertRegex(francis_report_url, '/profiles/.+')
+        self.assertRegex(francis_report_url, '/reports/.+')
         self.assertNotEqual(francis_report_url, edith_report_url)
 
         # Still no trace of Edith's report

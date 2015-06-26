@@ -26,7 +26,7 @@ class ReportModelTest(TestCase):
 
     def test_get_absolute_url(self):
         profile = Profile.objects.create()
-        self.assertEqual(profile.get_absolute_url(), '/profiles/%d/' % (profile.id,))
+        self.assertEqual(profile.get_absolute_url(), '/reports/%d/' % (profile.id,))
 
     def test_report_ordering(self):
         profile = Profile.objects.create()
