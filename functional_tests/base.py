@@ -1,5 +1,7 @@
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from selenium import webdriver
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.common.exceptions import NoSuchElementException
 import sys
 
 class FunctionalTest(StaticLiveServerTestCase):
@@ -32,3 +34,20 @@ class FunctionalTest(StaticLiveServerTestCase):
 
     def get_report_input_box(self):
         return self.browser.find_element_by_id('id_text')
+
+
+    def wait_for_element_with_id(self, element_id):
+        WebDriverWait(self.browser, timeout=30).until(
+            lambda b: b.find_element_by_id(element_id),
+            'Could not find element with id {}. Page text was:\n{}'.format(
+                element_id, self.browser.find_element_by_tag_name('body').text
+            )
+        )
+
+    def wait_to_be_logged_in(self):
+        self.wait_for_element_with_id('id_logout')
+        self.assertRaises(NoSuchElementException, self.browser.find_element_by_id, 'id_signup')
+
+    def wait_to_be_logged_out(self):
+        self.wait_for_element_with_id('id_signup')
+        self.assertRaises(NoSuchElementException, self.browser.find_element_by_id, 'id_logout')
