@@ -34,11 +34,34 @@ class DashboardTest(FunctionalTest):
             self.browser.add_cookie({'name': 'sessionid', 'value': cookie.value, 'secure': False, 'path': '/'})
 
     def test_logged_in_users_reports_are_saved_on_dashboard(self):
-        self.browser.get(self.server_url)
-        self.wait_to_be_logged_out()
-
         # Edith is a logged-in user
         self.create_pre_authenticated_session('edith', 'somePa55word')
 
+        # She goes to the home page and starts a report
         self.browser.get(self.server_url)
-        self.wait_to_be_logged_in()
+        self.get_report_input_box().send_keys('Something happened\n')
+        first_report_url = self.browser.current_url
+
+        # She notices a "My reports" link, for the first time.
+        self.browser.find_element_by_link_text('My reports').click()
+
+        # She sees that her report is in there
+        self.browser.find_element_by_link_text('Report 1').click()
+        self.assertEqual(self.browser.current_url, first_report_url)
+
+        # She decides to start another report, just to see
+        self.browser.get(self.server_url)
+        self.get_item_input_box().send_keys('Something else happened\n')
+        second_report_url = self.browser.current_url
+
+        # Under "my reports", her new report appears
+        self.browser.find_element_by_link_text('My reports').click()
+        self.browser.find_element_by_link_text('Report 2').click()
+        self.assertEqual(self.browser.current_url, second_report_url)
+
+        # She logs out.  The "My reports" option disappears
+        self.browser.find_element_by_id('id_logout').click()
+        self.assertEqual(
+            self.browser.find_elements_by_link_text('My reports'),
+            []
+        )
