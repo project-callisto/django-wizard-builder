@@ -1,12 +1,14 @@
 from django.core.exceptions import ValidationError
 from django.shortcuts import redirect, render
 from django.http import HttpResponse
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, get_user_model
 from django.contrib.auth.forms import UserCreationForm
 from django.views.generic import FormView
+User = get_user_model()
 
 from reports.models import Report, Profile
 from reports.forms import ReportForm
+
 
 SIGNUP_ERROR='There was an error creating your account. Please email contact@projectcallisto.org if it persists.'
 
@@ -27,7 +29,9 @@ def view_profile(request, profile_id):
 def new_profile(request):
     form = ReportForm(data=request.POST)
     if form.is_valid():
-        profile = Profile.objects.create()
+        profile = Profile()
+        profile.owner = request.user
+        profile.save()
         form.save(for_profile=profile)
         return redirect(profile)
     else:
@@ -53,4 +57,5 @@ class SignupView(FormView):
       return super(SignupView, self).form_valid(form)
 
 def dashboard(request, username):
-    return render(request, 'dashboard.html')
+    owner = User.objects.get(username=username)
+    return render(request, 'dashboard.html', {'owner': owner})

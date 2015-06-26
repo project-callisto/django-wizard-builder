@@ -10,7 +10,7 @@ from django.contrib.sessions.models import Session
 
 User = get_user_model()
 
-from reports.views import SIGNUP_ERROR
+from reports.views import SIGNUP_ERROR, new_profile
 from reports.models import Report, Profile
 from reports.forms import ReportForm, EMPTY_REPORT_ERROR
 
@@ -201,8 +201,26 @@ class NewProfileTest(TestCase):
         self.assertEqual(Profile.objects.count(), 0)
         self.assertEqual(Report.objects.count(), 0)
 
+    def test_report_owner_is_saved_if_user_is_authenticated(self):
+        user = User.objects.create_user(username='some_username', password='password')
+        self.client.login(username='some_username', password='password')
+        self.client.post(
+            '/reports/new',
+            data={'text': 'A new report'}
+        )
+        profile = Profile.objects.first()
+        self.assertEqual(profile.owner, user)
+
 class MyReportsTest(TestCase):
 
     def test_my_reports_url_renders_my_reports_template(self):
+        User.objects.create_user(username='some_username', password='password')
         response = self.client.get('/reports/dashboard/some_username/')
         self.assertTemplateUsed(response, 'dashboard.html')
+
+    def test_passes_correct_owner_to_template(self):
+        wrong_user = User.objects.create_user(username='wrong_user', password='password')
+        correct_user = User.objects.create_user(username='right_user', password='password')
+        response = self.client.get('/reports/dashboard/right_user/')
+        self.assertEqual(response.context['owner'], correct_user)
+
