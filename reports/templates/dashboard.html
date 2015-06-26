@@ -1,0 +1,13 @@
+{% extends 'crapllisto.html' %}
+
+{% block header_text %}My Reports{% endblock %}
+{% block report_form %}{% endblock %}
+
+{% block extra_content %}
+    <h2>{{ owner.username }}'s reports</h2>  1
+    <ul>
+        {% for list in owner.report_set.all %}  2
+            <li><a href="{{ report.get_absolute_url }}">{{ report.name }}</a></li>  3
+        {% endfor %}
+    </ul>
+{% endblock %}

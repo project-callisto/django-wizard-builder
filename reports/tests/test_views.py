@@ -200,3 +200,9 @@ class NewProfileTest(TestCase):
         self.client.post('/reports/new', data={'text':''})
         self.assertEqual(Profile.objects.count(), 0)
         self.assertEqual(Report.objects.count(), 0)
+
+class MyReportsTest(TestCase):
+
+    def test_my_reports_url_renders_my_reports_template(self):
+        response = self.client.get('/reports/dashboard/some_username/')
+        self.assertTemplateUsed(response, 'dashboard.html')

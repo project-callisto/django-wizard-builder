@@ -51,3 +51,6 @@ class SignupView(FormView):
         form.add_error(None, ValidationError(SIGNUP_ERROR, code='signup_error'))
         return self.render_to_response(self.get_context_data(form=form))
       return super(SignupView, self).form_valid(form)
+
+def dashboard(request, username):
+    return render(request, 'dashboard.html')

@@ -5,6 +5,8 @@
             <div class="text-center">
                 <h1>Crapllisto</h1>
                 <h2>{% block header_text %}{% endblock %}</h2>
+
+                {% block report_form %}
                 <form method="POST" action="{% block form_action %}{% endblock %}">
                     {% if form.errors %}
                     <div class="form-group has-error">
@@ -14,12 +16,20 @@
                     {{ form.text }}
                     {% csrf_token %}
                 </form>
+                {% endblock %}
             </div>
         </div>
     </div>
     <div class="row">
         <div class="col-md-6 col-md-offset-3">
             {% block table %}
+            {% endblock %}
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+            {% block extra_content %}
             {% endblock %}
         </div>
     </div>
