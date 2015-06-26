@@ -11,14 +11,17 @@ class FunctionalTest(StaticLiveServerTestCase):
         for arg in sys.argv:
             if 'liveserver' in arg:
                 cls.server_url = 'http://' + arg.split('=')[1]
+                cls.against_staging = True
                 return
         super().setUpClass()
+        cls.against_staging = False
         cls.server_url = cls.live_server_url
 
     @classmethod
     def tearDownClass(cls):
-        if cls.server_url == cls.live_server_url:
+        if not cls.against_staging:
             super().tearDownClass()
+
 
     def setUp(self):
         self.browser = webdriver.Firefox()
