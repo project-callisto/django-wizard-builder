@@ -2,8 +2,7 @@ from django.contrib.auth import get_user_model
 from django.test import override_settings
 
 from ..models import (
-    Checkbox, Choice, MultipleChoice, Page, RadioButton,
-    SingleLineText,
+    Checkbox, Choice, MultipleChoice, Page, RadioButton, SingleLineText,
 )
 from .base import FunctionalTest
 
