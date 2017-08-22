@@ -5,13 +5,12 @@ from ..models import (
 )
 from .page_admin import PageAdmin
 from .question_admin import (
-    FormQuestionChildAdmin, FormQuestionParentAdmin, MultipleChoiceChildAdmin,
+    FormQuestionChildAdmin, MultipleChoiceChildAdmin,
     MultipleChoiceParentAdmin,
 )
 
 admin.site.register(Page, PageAdmin)
 
-admin.site.register(FormQuestion, FormQuestionParentAdmin)
 admin.site.register(SingleLineText, FormQuestionChildAdmin)
 
 admin.site.register(MultipleChoice, MultipleChoiceParentAdmin)
