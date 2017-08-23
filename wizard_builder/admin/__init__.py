@@ -1,9 +1,12 @@
+# flake8: noqa
+
 from django.contrib import admin
 
 from ..models import (
-    Checkbox, MultipleChoice, Page, RadioButton, SingleLineText,
+    Checkbox, FormQuestion, MultipleChoice, Page, RadioButton, SingleLineText,
 )
 from .page_admin import PageAdmin
+from .question_admin import FormQuestionParentAdmin  # NOQA
 from .question_admin import (
     FormQuestionChildAdmin, MultipleChoiceChildAdmin,
     MultipleChoiceParentAdmin,

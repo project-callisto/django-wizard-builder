@@ -8,6 +8,13 @@ class FormQuestionAdminMixin(object):
     list_filter = ['page__sites']
 
 
+class FormQuestionParentAdmin(
+    FormQuestionAdminMixin,
+    DowncastedAdmin
+):
+    list_display = ['short_str', 'model_type', 'page']
+
+
 class FormQuestionChildAdmin(
     FormQuestionAdminMixin,
     nested_admin.NestedModelAdmin
@@ -16,10 +23,8 @@ class FormQuestionChildAdmin(
 
 
 class MultipleChoiceParentAdmin(
-    FormQuestionAdminMixin,
-    DowncastedAdmin
+    FormQuestionParentAdmin,
 ):
-    list_display = ['short_str', 'model_type', 'page']
     inlines = [ChoiceInline]
 
 
