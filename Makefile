@@ -22,6 +22,7 @@ test-fast:
 
 test-local-suite:
 	python manage.py check
+	bandit -r wizard_builder/
 	pytest --cov=wizard_builder -v --ignore wizard_builder/tests/test_frontend.py
 	pytest --cov=wizard_builder -v wizard_builder/tests/test_frontend.py
 
